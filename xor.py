@@ -9,7 +9,7 @@ dsigmoid = lambda x: x * (1 - x)
 tanh = np.tanh
 dtanh = lambda x: 1 - (np.tanh(x)**2)
 
-n = NeuralNetwork([2, 4, 1], 0.01, [tanh, sigmoid], [dtanh, dsigmoid])
+n = NeuralNetwork([2, 3, 1], 0.01, [tanh, sigmoid], [dtanh, dsigmoid])
 training_data = np.array([
     [0, 1],
     [1, 0],
@@ -25,7 +25,7 @@ training_labels = np.array([
 ])
 
 BATCH = 200
-EPOCH_PER_BATCH = 100
+EPOCH_PER_BATCH = 50
 
 print("$ Pre entrainement")
 for i, j in zip(training_data, training_labels):
@@ -48,7 +48,6 @@ t = np.linspace(1,BATCH,BATCH)
 f = 1/np.sqrt(t)
 plt.figure()
 plt.plot(t, losses, "r")
-plt.plot(t, f, "b")
 plt.xlabel("BATCH")
 plt.ylabel("Loss")
 plt.show()

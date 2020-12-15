@@ -39,28 +39,34 @@ dsigmoid = lambda x: x * (1 - x)
 tanh = np.tanh
 dtanh = lambda x: 1 - (np.tanh(x) ** 2)
 
-n = NeuralNetwork([784, 950, 500, 150, 10], 0.01, [tanh, sigmoid, tanh, sigmoid], [dtanh, dsigmoid, dtanh, dsigmoid])
+if __name__ == '__main__':
+    n = NeuralNetwork([784, 950, 500, 150, 10], 0.01, [tanh, sigmoid, tanh, sigmoid], [dtanh, dsigmoid, dtanh, dsigmoid])
 
-BATCH = 150
-BATCH_SIZE = 400
-losses = np.zeros(BATCH)
+    BATCH = 100
+    BATCH_SIZE = 10
+    losses = np.zeros(BATCH)
+    losses2 = np.zeros(BATCH)
 
-for i in range(BATCH):
-    t1 = time.time()
-    for j in range(BATCH_SIZE):
-        rn = np.random.randint(59999)
-        n.train([x_train[rn]], [tjb_train[rn]], 1)
-    t2 = time.time()
-    u = n.losses(x_test, tjb_test)
-    losses[i] = u
-    t3 = time.time()
-    print(f"Batch : {i + 1}/{BATCH} en {round(t2 - t1, 4)} s avec {round(t3 - t2, 4)} en loss")
+    for i in range(BATCH):
+        t1 = time.time()
+        for j in range(BATCH_SIZE):
+            rn = np.random.randint(59999)
+            n.train([x_train[rn]], [tjb_train[rn]], 1)
+        t2 = time.time()
+        u = n.losses(x_test[:10], tjb_test[:10])
+        losses[i] = u
+        t3 = time.time()
+        u = n.loss_cross_entropy(x_test[:10], tjb_test[:10])
+        losses2[i] = u
+        t4 = time.time()
+        print(f"Batch : {i + 1}/{BATCH} en {round(t2 - t1, 4)} s avec {round(t3 - t2, 4)} en loss et {round(t4 - t3, 4)} en loss pool")
 
-n.save("mninst_data_1")
+    #n.save("mninst_data_1")
 
-plt.figure()
-plt.plot(losses)
-plt.xlabel("BATCH")
-plt.ylabel("Loss")
-plt.title(f"Loss with {BATCH} batchs of {BATCH_SIZE} retropopagation")
-plt.show()
+    plt.figure()
+    #plt.plot(losses)
+    plt.plot(losses2)
+    plt.xlabel("BATCH")
+    plt.ylabel("Loss")
+    plt.title(f"MNIST Loss with {BATCH} batchs of {BATCH_SIZE} retropopagation")
+    plt.show()
