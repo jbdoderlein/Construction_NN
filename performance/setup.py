@@ -2,7 +2,7 @@ from setuptools import setup, Extension
 import os
 import numpy
 
-os.environ["CC"] = "clang.exe"
+#os.environ["CC"] = "clang.exe"
 
 ext = Extension(
     'c_extension',
