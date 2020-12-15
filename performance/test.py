@@ -36,10 +36,12 @@ def c_optimized_implementation(arr1, arr2):
 
 @timer
 def c_dot_product_optimized_parallel(arr1, arr2):
-    return c_extension.dot_product_optimized_parallel(arr1.tolist(), arr2.tolist())
+    a = arr1.tolist()
+    b = arr2.tolist()
+    return c_extension.dot_product_optimized_parallel(a, b)
 
 if __name__ == '__main__':
-    data = generate(size=2000)
+    data = generate(size=10)
     numpy_time_taken, numpy_result = numpy_implementation(*data)
     #c_time_taken, c_result = c_cos(data[0])
     c_time_taken_p, c_result_p = c_dot_product_optimized_parallel(*data)
