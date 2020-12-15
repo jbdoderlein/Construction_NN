@@ -4,7 +4,7 @@
 #include "omp.h"
 
 
-#define MAX_SIZE 500*500
+#define MAX_SIZE 1000*1000
 typedef double BASE_TYPE;
 BASE_TYPE row_major[MAX_SIZE];
 BASE_TYPE column_major[MAX_SIZE];
@@ -83,7 +83,8 @@ PyObject* dot_product_optimized_parallel(PyObject* self, PyObject* args) {
     BASE_TYPE **result = init_result_array(mat1_rows, mat2_columns);
     #pragma omp parallel num_threads(6)
     {
-        int tot, iOff, jOff;
+        float tot;
+        int iOff, jOff;
         #pragma omp for
         for(int i=0; i < mat1_rows; i++) {
             iOff = i * mat1_columns;
@@ -91,7 +92,7 @@ PyObject* dot_product_optimized_parallel(PyObject* self, PyObject* args) {
                 tot = 0;
                 jOff = j * mat2_rows;
                 for(int k=0; k < mat2_rows; k++){
-                    tot += row_major[iOff + k] * column_major[jOff + k];
+                    tot += (float)row_major[iOff + k] * (float)column_major[jOff + k];
                 }
                 result[i][j] = tot;
             }
