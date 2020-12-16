@@ -23,9 +23,9 @@ delu = lambda x: np.where(x > 0, 1, np.exp(x))
 n = NeuralNetwork([6400, 7000, 500, 20, 2], 0.01, [tanh, sigmoid, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dsigmoid])
 
-BATCH = 3  # Nombre de batch
-EPOCH = 5  # Nombre di'mage avant retropopagation
-BATCH_SIZE = 5 # Nombre d'epoch (et donc entre chaque calcul de loss)
+BATCH = 100  # Nombre de batch
+EPOCH = 20  # Nombre di'mage avant retropopagation
+BATCH_SIZE = 10 # Nombre d'epoch (et donc entre chaque calcul de loss)
 losses = np.zeros(BATCH)
 losses2 = np.zeros(BATCH)
 
@@ -43,6 +43,10 @@ for i in range(BATCH):
     losses[i] = u
     t3 = time.time()
     print(f"Batch : {i + 1}/{BATCH} en {round(t2 - t1, 4)} s avec {round(t3 - t2, 4)} en loss ({EPOCH} {BATCH_SIZE})")
+
+n.save("covid_1.dill")
+with open("matploto_1", 'wb') as f:
+    dill.dump(losses.tolist(), f)
 
 
 plt.figure()
