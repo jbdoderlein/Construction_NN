@@ -1,6 +1,6 @@
 import time
 import numpy as np
-import cupy as cp
+import numpy as cp
 
 
 def timer(func):
