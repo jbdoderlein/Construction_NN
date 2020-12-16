@@ -3,4 +3,3 @@ matplotlib
 scikit-learn
 dill
 setuptools
-cupy

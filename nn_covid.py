@@ -20,12 +20,12 @@ drelu = lambda x: np.where(x > 0, 1, 0)
 elu = lambda x: np.where(x >= 0, x, np.exp(x) - 1)
 delu = lambda x: np.where(x > 0, 1, np.exp(x))
 
-n = NeuralNetwork([6400, 7000, 500, 20, 2], 0.01, [elu, relu, elu, sigmoid],
-                  [delu, drelu, delu, dsigmoid])
+n = NeuralNetwork([6400, 7000, 500, 20, 2], 0.01, [tanh, sigmoid, tanh, sigmoid],
+                  [dtanh, dsigmoid, dtanh, dsigmoid])
 
-BATCH = 10  # Nombre de batch
-EPOCH = 30  # Nombre di'mage avant retropopagation
-BATCH_SIZE = 10 # Nombre d'epoch (et donc entre chaque calcul de loss)
+BATCH = 3  # Nombre de batch
+EPOCH = 5  # Nombre di'mage avant retropopagation
+BATCH_SIZE = 5 # Nombre d'epoch (et donc entre chaque calcul de loss)
 losses = np.zeros(BATCH)
 losses2 = np.zeros(BATCH)
 
