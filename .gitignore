@@ -6,3 +6,5 @@
 *.pyd
 
 test.build/
+
+*.mpi
