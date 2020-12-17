@@ -1,6 +1,7 @@
 import mnist
 import cupy as cp
 import numpy as np
+import dill
 from matplotlib import pyplot as plt
 from CupyNeuralNetwork import NeuralNetwork
 import time
@@ -45,10 +46,9 @@ if __name__ == '__main__':
     T1 = time.time()
     n = NeuralNetwork([784, 950, 500, 150, 10], 0.01, [tanh, sigmoid, tanh, sigmoid], [dtanh, dsigmoid, dtanh, dsigmoid])
 
-    BATCH = 100
-    BATCH_SIZE = 10
+    BATCH = 2000
+    BATCH_SIZE = 5
     losses = cp.zeros(BATCH)
-    losses2 = cp.zeros(BATCH)
 
     for i in range(BATCH):
         t1 = time.time()
@@ -62,6 +62,8 @@ if __name__ == '__main__':
         print(f"Batch : {i + 1}/{BATCH} en {round(t2 - t1, 4)} s avec {round(t3 - t2, 4)} en loss")
     T2 = time.time()
     print("Le tout en ", T2-T1)
+    with open("mnist_loss_cupy_1", 'wb') as f:
+        dill.dump(losses.tolist(), f)
     #n.save("mninst_data_1")
     """
     plt.figure()
