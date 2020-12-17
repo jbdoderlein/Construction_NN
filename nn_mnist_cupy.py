@@ -59,10 +59,7 @@ if __name__ == '__main__':
         u = n.losses(x_test[:10], tjb_test[:10])
         losses[i] = u
         t3 = time.time()
-        u = n.loss_cross_entropy(x_test[:10], tjb_test[:10])
-        losses2[i] = u
-        t4 = time.time()
-        print(f"Batch : {i + 1}/{BATCH} en {round(t2 - t1, 4)} s avec {round(t3 - t2, 4)} en loss et {round(t4 - t3, 4)} en loss pool")
+        print(f"Batch : {i + 1}/{BATCH} en {round(t2 - t1, 4)} s avec {round(t3 - t2, 4)} en loss")
     T2 = time.time()
     print("Le tout en ", T2-T1)
     #n.save("mninst_data_1")

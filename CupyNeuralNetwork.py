@@ -99,22 +99,5 @@ class NeuralNetwork:
             loss += np.mean((result - training_labels[i]) ** 2)
         return loss/n
 
-    def cross_entropy(self, p, q):
-        return -sum(p * np.log(q))
-
-    def loss_cross_entropy(self, training_data, training_labels):
-        """
-        Erreur quadratique moyenne
-        :param training_data: liste de tests
-        :param training_labels: resultats attendu des test
-        :return: erreur quadratique moyenne
-        """
-        loss = 0
-        n = len(training_data)
-        for i in range(n):
-            result = self.forward_propagation(training_data[i])
-            loss += np.mean([self.cross_entropy(result, training_labels[i]), self.cross_entropy(1 - result, 1 - training_labels[i])])
-        return loss/n
-
 
 
