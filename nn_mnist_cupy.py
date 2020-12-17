@@ -52,7 +52,7 @@ if __name__ == '__main__':
         t1 = time.time()
         for j in range(BATCH_SIZE):
             rn = np.random.randint(59999)
-            a = x_train[rn]
+            a = np.array(x_train[rn])
             b = tjb_train[rn]
             c = np.get_array_module(a)
             d = np.get_array_module(b)
