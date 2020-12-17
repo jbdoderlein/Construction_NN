@@ -1,7 +1,7 @@
 import mnist
 import cupy as np
 from matplotlib import pyplot as plt
-from NeuralNetwork import NeuralNetwork
+from CupyNeuralNetwork import NeuralNetwork
 import time
 
 
