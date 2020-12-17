@@ -21,7 +21,7 @@ drelu = lambda x: np.where(x > 0, 1, 0)
 elu = lambda x: np.where(x >= 0, x, np.exp(x) - 1)
 delu = lambda x: np.where(x > 0, 1, np.exp(x))
 
-n = NeuralNetwork([14400, 20000, 1000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
+n = NeuralNetwork([14400, 15000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
 
 BATCH = 100  # Nombre de batch
