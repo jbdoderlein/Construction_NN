@@ -52,7 +52,12 @@ if __name__ == '__main__':
         t1 = time.time()
         for j in range(BATCH_SIZE):
             rn = np.random.randint(59999)
-            n.train([np.cupy.get_array_module(x_train[rn])], [np.cupy.get_array_module(tjb_train[rn])])
+            a = x_train[rn]
+            b = tjb_train[rn]
+            c = np.get_array_module(a)
+            d = np.get_array_module(b)
+            print(type(a), type(b), type(c), type(d))
+            n.train([c], [d])
         t2 = time.time()
         u = n.losses(x_test[:10], tjb_test[:10])
         losses[i] = u
