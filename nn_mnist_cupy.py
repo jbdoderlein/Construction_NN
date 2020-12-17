@@ -12,7 +12,7 @@ def convert_label(labels):
         t = cp.zeros(10)
         t[labels[i]] = 1
         newlab[i] = t[:, cp.newaxis]
-    return np.array(newlab)
+    return cp.array(newlab)
 
 
 def max_output(v):
@@ -38,7 +38,7 @@ def img_show(array):
 
 sigmoid = lambda x: 1 / (1 + cp.exp(-x))
 dsigmoid = lambda x: x * (1 - x)
-tanh = np.tanh
+tanh = cp.tanh
 dtanh = lambda x: 1 - (cp.tanh(x) ** 2)
 
 if __name__ == '__main__':
@@ -54,7 +54,7 @@ if __name__ == '__main__':
         t1 = time.time()
         for j in range(BATCH_SIZE):
             rn = cp.random.randint(59999)
-            n.train([np.x_train[rn]], [tjb_train[rn]])
+            n.train([x_train[rn]], [tjb_train[rn]])
         t2 = time.time()
         u = n.losses(x_test[:10], tjb_test[:10])
         losses[i] = u
