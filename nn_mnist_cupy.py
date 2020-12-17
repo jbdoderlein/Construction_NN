@@ -1,5 +1,6 @@
 import mnist
-import cupy as np
+import cupy as cp
+import numpy as np
 from matplotlib import pyplot as plt
 from CupyNeuralNetwork import NeuralNetwork
 import time
@@ -8,9 +9,9 @@ import time
 def convert_label(labels):
     newlab = [0] * len(labels)
     for i in range(len(labels)):
-        t = np.zeros(10)
+        t = cp.zeros(10)
         t[labels[i]] = 1
-        newlab[i] = t[:, np.newaxis]
+        newlab[i] = t[:, cp.newaxis]
     return np.array(newlab)
 
 
@@ -23,6 +24,7 @@ def max_output(v):
 
 
 x_train, t_train, x_test, t_test = mnist.load()
+x_train, t_train, x_test, t_test = cp.array(x_train), cp.array(t_train), cp.array(x_test), cp.array(t_test)
 
 tjb_train = convert_label(t_train)
 tjb_test = convert_label(t_test)
@@ -34,10 +36,10 @@ def img_show(array):
     plt.show()
 
 
-sigmoid = lambda x: 1 / (1 + np.exp(-x))
+sigmoid = lambda x: 1 / (1 + cp.exp(-x))
 dsigmoid = lambda x: x * (1 - x)
 tanh = np.tanh
-dtanh = lambda x: 1 - (np.tanh(x) ** 2)
+dtanh = lambda x: 1 - (cp.tanh(x) ** 2)
 
 if __name__ == '__main__':
     T1 = time.time()
@@ -45,20 +47,14 @@ if __name__ == '__main__':
 
     BATCH = 100
     BATCH_SIZE = 10
-    losses = np.zeros(BATCH)
-    losses2 = np.zeros(BATCH)
+    losses = cp.zeros(BATCH)
+    losses2 = cp.zeros(BATCH)
 
     for i in range(BATCH):
         t1 = time.time()
         for j in range(BATCH_SIZE):
-            rn = np.random.randint(59999)
-            print(type(x_train))
-            a = np.array(x_train.get(rn))
-            b = tjb_train[rn]
-            c = np.get_array_module(a)
-            d = np.get_array_module(b)
-            print(type(a), type(b), type(c), type(d))
-            n.train([c], [d])
+            rn = cp.random.randint(59999)
+            n.train([np.x_train[rn]], [tjb_train[rn]])
         t2 = time.time()
         u = n.losses(x_test[:10], tjb_test[:10])
         losses[i] = u
