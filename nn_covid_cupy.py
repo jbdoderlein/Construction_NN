@@ -1,3 +1,4 @@
+import numpy as np
 import cupy as cp
 from matplotlib import pyplot as plt
 from CupyNeuralNetwork import NeuralNetwork
@@ -93,7 +94,7 @@ for i in range(BATCH):
 ## NN representation
 
 plt.figure()
-plt.plot(losses)
+plt.plot(losses.get())
 plt.xlabel("BATCH")
 plt.ylabel("Loss")
 plt.title(f"Covid Loss with {BATCH} batchs of {BATCH_SIZE} retropopagation")
