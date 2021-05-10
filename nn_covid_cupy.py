@@ -16,7 +16,7 @@ args = vars(ap.parse_args())
 
 ## Dataset Init
 
-SIZE = 80  # Taille des images
+SIZE = 100  # Taille des images
 test_proportion = args["test_proportion"]  # Proportion des images classé comme test
 dataset_name = args["dataset"]
 
@@ -76,12 +76,14 @@ delu = lambda x: cp.where(x > 0, 1, cp.exp(x))
 n = NeuralNetwork([SIZE ** 2, 8000, 2500, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
 
-BATCH = 20  # Nombre de batch
-EPOCH = 10  # Nombre di'mage avant retropopagation
-BATCH_SIZE = 5  # Nombre d'epoch (et donc entre chaque calcul de loss)
+BATCH = 300  # Nombre de batch
+EPOCH = 1  # Nombre d'image avant retropopagation
+BATCH_SIZE = 10  # Nombre d'epoch (et donc entre chaque calcul de loss)
 losses = cp.zeros(BATCH)
 
 ## NN Execution
+
+stime = time.time()
 
 for i in range(BATCH):
     t1 = time.time()
@@ -98,6 +100,7 @@ for i in range(BATCH):
     t3 = time.time()
     print(f"Batch : {i + 1}/{BATCH} en {round(t2 - t1, 4)} s avec {round(t3 - t2, 4)} en loss ({EPOCH} {BATCH_SIZE})")
 
+ftime = time.time()
 ## NN representation
 evaluation, accuracy, precision, recall, f1_score = n.confusion(img_test, label_test)
 peval = tabulate(evaluation, tablefmt="fancy_grid")
@@ -109,7 +112,7 @@ pscore = tabulate(
         ["f1_score", f1_score]
     ]
     , tablefmt="fancy_grid")
-str_result = f"Evaluation :\n{peval}\nScore :\n{pscore}"
+str_result = f"Evaluation :\n{peval}\nScore :\n{pscore}\nTime to train : {round(ftime - stime, 4)}"
 print(str_result)
 
 plt.figure()
@@ -118,7 +121,7 @@ plt.xlabel("BATCH")
 plt.ylabel("Loss")
 plt.title(f"Covid Loss with {BATCH} batchs of {BATCH_SIZE} retropopagation")
 
-filename = "naif_s100_b120_e10_bs5"
+filename = "naif_s90_b300_e1_bs10"
 plt.savefig(f'plot/{filename}.png')
 with open(f"{filename}.txt", "w") as f:
     f.write(str_result)
