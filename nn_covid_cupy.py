@@ -76,9 +76,9 @@ delu = lambda x: cp.where(x > 0, 1, cp.exp(x))
 n = NeuralNetwork([SIZE ** 2, 3000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
 
-BATCH = 5  # Nombre de batch
-EPOCH = 5  # Nombre di'mage avant retropopagation
-BATCH_SIZE = 2  # Nombre d'epoch (et donc entre chaque calcul de loss)
+BATCH = 20  # Nombre de batch
+EPOCH = 10  # Nombre di'mage avant retropopagation
+BATCH_SIZE = 5  # Nombre d'epoch (et donc entre chaque calcul de loss)
 losses = cp.zeros(BATCH)
 
 ## NN Execution
