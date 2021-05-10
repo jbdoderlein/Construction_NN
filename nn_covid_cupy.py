@@ -1,4 +1,3 @@
-import numpy as np
 import cupy as cp
 from matplotlib import pyplot as plt
 from CupyNeuralNetwork import NeuralNetwork
@@ -28,28 +27,28 @@ print(f"{covidfiles_size} covid patient and {normalfiles_size} non-covid patient
 for i in range(covidfiles_size):
     try:
         image = Image.open(f'{dataset_name}/covid/{covidfiles[i]}').convert('L')
-        image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
-        label = np.array([0, 1])
+        image_array = cp.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
+        label = cp.array([0, 1])
         if i < covidfiles_size * (1 - test_proportion):  # Image train
             img_train.append(image_array)
-            label_train.append(label[:, np.newaxis])
+            label_train.append(label[:, cp.newaxis])
         else:  # Image test
             img_test.append(image_array)
-            label_test.append(label[:, np.newaxis])
+            label_test.append(label[:, cp.newaxis])
     except Exception as e:
         print("error with ", i)
 
 for i in range(normalfiles_size):
     try:
         image = Image.open(f'{dataset_name}/normal/{normalfiles[i]}').convert('L')
-        image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
-        label = np.array([0, 1])
+        image_array = cp.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
+        label = cp.array([0, 1])
         if i < normalfiles_size * (1 - test_proportion):  # Image train
             img_train.append(image_array)
-            label_train.append(label[:, np.newaxis])
+            label_train.append(label[:, cp.newaxis])
         else:  # Image test
             img_test.append(image_array)
-            label_test.append(label[:, np.newaxis])
+            label_test.append(label[:, cp.newaxis])
     except Exception as e:
         print("error with ", i)
 
@@ -57,14 +56,14 @@ for i in range(normalfiles_size):
 
 
 # Fonctions d'activations
-sigmoid = lambda x: 1 / (1 + np.exp(-x))
+sigmoid = lambda x: 1 / (1 + cp.exp(-x))
 dsigmoid = lambda x: x * (1 - x)
-tanh = np.tanh
-dtanh = lambda x: 1 - (np.tanh(x) ** 2)
-relu = lambda x: np.maximum(x, 0)
-drelu = lambda x: np.where(x > 0, 1, 0)
-elu = lambda x: np.where(x >= 0, x, np.exp(x) - 1)
-delu = lambda x: np.where(x > 0, 1, np.exp(x))
+tanh = cp.tanh
+dtanh = lambda x: 1 - (cp.tanh(x) ** 2)
+relu = lambda x: cp.maximum(x, 0)
+drelu = lambda x: cp.where(x > 0, 1, 0)
+elu = lambda x: cp.where(x >= 0, x, cp.exp(x) - 1)
+delu = lambda x: cp.where(x > 0, 1, cp.exp(x))
 
 n = NeuralNetwork([SIZE ** 2, 3000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
@@ -72,7 +71,7 @@ n = NeuralNetwork([SIZE ** 2, 3000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tan
 BATCH = 5  # Nombre de batch
 EPOCH = 5  # Nombre di'mage avant retropopagation
 BATCH_SIZE = 2  # Nombre d'epoch (et donc entre chaque calcul de loss)
-losses = np.zeros(BATCH)
+losses = cp.zeros(BATCH)
 
 ## NN Execution
 
