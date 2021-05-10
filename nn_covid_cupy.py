@@ -5,45 +5,43 @@ from CupyNeuralNetwork import NeuralNetwork
 import time
 from os import listdir
 from os.path import isfile, join
+from PIL import Image
 
 ## Dataset Init
 
-SIZE = 100
+SIZE = 100 # Taille des images
+test_proportion = 0.2 # Proportion des images classé comme test
+dataset_name = "jb_dataset"
 
 img_train = []
 label_train = []
 img_test = []
 label_test = []
 
-covidfiles = [f for f in listdir('jb_dataset/covid') if isfile(join('compiled/covided', f))]
-normalfiles = [f for f in listdir('jb_dataset/normal') if isfile(join('compiled/normal', f))]
+covidfiles = [f for f in listdir(f'{dataset_name}/covid') if isfile(join(f'{dataset_name}/covid', f))]
+normalfiles = [f for f in listdir(f'{dataset_name}/normal') if isfile(join(f'{dataset_name}/normal', f))]
 
-test_proportion = 0.8
-SIZE = 120
-
-n = len(covidedfiles)
+n = len(covidfiles)
 for i in range(n):
-    print(i)
-    image = Image.open(f'compiled/covided/{covidedfiles[i]}').convert('L')
+    image = Image.open(f'{dataset_name}/covid/{covidfiles[i]}').convert('L')
     image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
     label = np.array([0, 1])
-    if i < n*test_proportion:
+    if i < n*(1-test_proportion):               # Image train
         img_train.append(image_array)
         label_train.append(label[:, np.newaxis])
-    else:
+    else:                                       # Image test
         img_test.append(image_array)
         label_test.append(label[:, np.newaxis])
 
 n = len(normalfiles)
 for i in range(n):
-    print(i)
-    image = Image.open(f'compiled/normal/{normalfiles[i]}').convert('L')
+    image = Image.open(f'{dataset_name}/normal/{covidfiles[i]}').convert('L')
     image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
-    label = np.array([1, 0])
-    if i < n*test_proportion:
+    label = np.array([0, 1])
+    if i < n * (1 - test_proportion):  # Image train
         img_train.append(image_array)
         label_train.append(label[:, np.newaxis])
-    else:
+    else:                              # Image test
         img_test.append(image_array)
         label_test.append(label[:, np.newaxis])
 
@@ -61,14 +59,13 @@ drelu = lambda x: np.where(x > 0, 1, 0)
 elu = lambda x: np.where(x >= 0, x, np.exp(x) - 1)
 delu = lambda x: np.where(x > 0, 1, np.exp(x))
 
-n = NeuralNetwork([14400, 15000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
+n = NeuralNetwork([SIZE**2, 15000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
 
 BATCH = 100  # Nombre de batch
 EPOCH = 20  # Nombre di'mage avant retropopagation
 BATCH_SIZE = 10 # Nombre d'epoch (et donc entre chaque calcul de loss)
 losses = np.zeros(BATCH)
-losses2 = np.zeros(BATCH)
 
 ## NN Execution
 
