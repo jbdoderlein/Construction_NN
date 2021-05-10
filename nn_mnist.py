@@ -41,10 +41,10 @@ dtanh = lambda x: 1 - (np.tanh(x) ** 2)
 
 if __name__ == '__main__':
     T1 = time.time()
-    n = NeuralNetwork([784, 950, 500, 150, 10], 0.01, [tanh, sigmoid, tanh, sigmoid], [dtanh, dsigmoid, dtanh, dsigmoid])
+    n = NeuralNetwork([784, 1000, 600, 250, 10], 0.01, [tanh, sigmoid, tanh, sigmoid], [dtanh, dsigmoid, dtanh, dsigmoid])
 
-    BATCH = 100
-    BATCH_SIZE = 10
+    BATCH = 20
+    BATCH_SIZE = 2
     losses = np.zeros(BATCH)
     losses2 = np.zeros(BATCH)
 
@@ -64,12 +64,11 @@ if __name__ == '__main__':
     T2 = time.time()
     print("Le tout en ", T2-T1)
     #n.save("mninst_data_1")
-    """
+
     plt.figure()
-    #plt.plot(losses)
-    plt.plot(losses2)
+    plt.plot(losses)
+    #plt.plot(losses2)
     plt.xlabel("BATCH")
     plt.ylabel("Loss")
     plt.title(f"MNIST Loss with {BATCH} batchs of {BATCH_SIZE} retropopagation")
     plt.show()
-"""
