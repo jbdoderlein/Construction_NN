@@ -6,12 +6,19 @@ import time
 from os import listdir
 from os.path import isfile, join
 from PIL import Image
+import argparse
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-d", "--dataset", type=str, required=True, default="jb_dataset_covid")
+ap.add_argument("-s", "--size", type=int, default=30)
+ap.add_argument("-tp", "--test_proportion", type=float, default=0.2)
+args = vars(ap.parse_args())
 
 ## Dataset Init
 
-SIZE = 50  # Taille des images
-test_proportion = 0.2  # Proportion des images classé comme test
-dataset_name = "jb_dataset_covid"
+SIZE = args["size"]  # Taille des images
+test_proportion = args["test_proportion"]  # Proportion des images classé comme test
+dataset_name = args["dataset"]
 
 img_train = []
 label_train = []
