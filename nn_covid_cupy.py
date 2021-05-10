@@ -26,26 +26,32 @@ normalfiles_size = len(normalfiles)
 print(f"{covidfiles_size} covid patient and {normalfiles_size} non-covid patient")
 
 for i in range(covidfiles_size):
-    image = Image.open(f'{dataset_name}/covid/{covidfiles[i]}').convert('L')
-    image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
-    label = np.array([0, 1])
-    if i < covidfiles_size * (1 - test_proportion):  # Image train
-        img_train.append(image_array)
-        label_train.append(label[:, np.newaxis])
-    else:  # Image test
-        img_test.append(image_array)
-        label_test.append(label[:, np.newaxis])
+    try:
+        image = Image.open(f'{dataset_name}/covid/{covidfiles[i]}').convert('L')
+        image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
+        label = np.array([0, 1])
+        if i < covidfiles_size * (1 - test_proportion):  # Image train
+            img_train.append(image_array)
+            label_train.append(label[:, np.newaxis])
+        else:  # Image test
+            img_test.append(image_array)
+            label_test.append(label[:, np.newaxis])
+    except Exception as e:
+        print("error with ", i)
 
 for i in range(normalfiles_size):
-    image = Image.open(f'{dataset_name}/normal/{covidfiles[i]}').convert('L')
-    image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
-    label = np.array([0, 1])
-    if i < normalfiles_size * (1 - test_proportion):  # Image train
-        img_train.append(image_array)
-        label_train.append(label[:, np.newaxis])
-    else:  # Image test
-        img_test.append(image_array)
-        label_test.append(label[:, np.newaxis])
+    try:
+        image = Image.open(f'{dataset_name}/normal/{covidfiles[i]}').convert('L')
+        image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
+        label = np.array([0, 1])
+        if i < normalfiles_size * (1 - test_proportion):  # Image train
+            img_train.append(image_array)
+            label_train.append(label[:, np.newaxis])
+        else:  # Image test
+            img_test.append(image_array)
+            label_test.append(label[:, np.newaxis])
+    except Exception as e:
+        print("error with ", i)
 
 # NN Init
 
