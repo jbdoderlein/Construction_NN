@@ -10,13 +10,12 @@ import argparse
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-d", "--dataset", type=str, default="jb_dataset_covid")
-ap.add_argument("-s", "--size", type=int, default=30)
 ap.add_argument("-tp", "--test_proportion", type=float, default=0.2)
 args = vars(ap.parse_args())
 
 ## Dataset Init
 
-SIZE = args["size"]  # Taille des images
+SIZE = 60  # Taille des images
 test_proportion = args["test_proportion"]  # Proportion des images classé comme test
 dataset_name = args["dataset"]
 
@@ -50,7 +49,7 @@ for i in range(normalfiles_size):
     try:
         image = Image.open(f'{dataset_name}/normal/{normalfiles[i]}').convert('L')
         image_array = cp.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
-        label = cp.array([0, 1])
+        label = cp.array([1, 0])
         if i < normalfiles_size * (1 - test_proportion):  # Image train
             img_train.append(image_array)
             label_train.append(label[:, cp.newaxis])
@@ -73,7 +72,7 @@ drelu = lambda x: cp.where(x > 0, 1, 0)
 elu = lambda x: cp.where(x >= 0, x, cp.exp(x) - 1)
 delu = lambda x: cp.where(x > 0, 1, cp.exp(x))
 
-n = NeuralNetwork([SIZE ** 2, 3000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
+n = NeuralNetwork([SIZE ** 2, 4000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
 
 BATCH = 20  # Nombre de batch
