@@ -117,6 +117,7 @@ class NeuralNetwork:
         for i in range(n):
             result = int(np.argmax(self.forward_propagation(training_data[i])))
             excepted = int(np.argmax(training_labels[i]))
+            print(i, result, excepted)
             if result == 0:
                 if result == excepted:
                     evaluation[0, 0] += 1  # TP

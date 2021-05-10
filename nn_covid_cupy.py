@@ -120,6 +120,6 @@ plt.title(f"Covid Loss with {BATCH} batchs of {BATCH_SIZE} retropopagation")
 
 filename = "naif_s100_b120_e10_bs5"
 plt.savefig(f'plot/{filename}.png')
-with open(f"{filename}.txt", "rw") as f:
+with open(f"{filename}.txt", "w") as f:
     f.write(str_result)
 
