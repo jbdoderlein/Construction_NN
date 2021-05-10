@@ -9,8 +9,8 @@ from PIL import Image
 
 ## Dataset Init
 
-SIZE = 100 # Taille des images
-test_proportion = 0.2 # Proportion des images classé comme test
+SIZE = 50  # Taille des images
+test_proportion = 0.2  # Proportion des images classé comme test
 dataset_name = "jb_dataset"
 
 img_train = []
@@ -21,30 +21,31 @@ label_test = []
 covidfiles = [f for f in listdir(f'{dataset_name}/covid') if isfile(join(f'{dataset_name}/covid', f))]
 normalfiles = [f for f in listdir(f'{dataset_name}/normal') if isfile(join(f'{dataset_name}/normal', f))]
 
-n = len(covidfiles)
-for i in range(n):
+covidfiles_size = len(covidfiles)
+normalfiles_size = len(normalfiles)
+print(f"{covidfiles_size} covid patient and {normalfiles_size} non-covid patient")
+
+for i in range(covidfiles_size):
     image = Image.open(f'{dataset_name}/covid/{covidfiles[i]}').convert('L')
     image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
     label = np.array([0, 1])
-    if i < n*(1-test_proportion):               # Image train
+    if i < covidfiles_size * (1 - test_proportion):  # Image train
         img_train.append(image_array)
         label_train.append(label[:, np.newaxis])
-    else:                                       # Image test
+    else:  # Image test
         img_test.append(image_array)
         label_test.append(label[:, np.newaxis])
 
-n = len(normalfiles)
-for i in range(n):
+for i in range(normalfiles_size):
     image = Image.open(f'{dataset_name}/normal/{covidfiles[i]}').convert('L')
     image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
     label = np.array([0, 1])
-    if i < n * (1 - test_proportion):  # Image train
+    if i < normalfiles_size * (1 - test_proportion):  # Image train
         img_train.append(image_array)
         label_train.append(label[:, np.newaxis])
-    else:                              # Image test
+    else:  # Image test
         img_test.append(image_array)
         label_test.append(label[:, np.newaxis])
-
 
 # NN Init
 
@@ -59,12 +60,12 @@ drelu = lambda x: np.where(x > 0, 1, 0)
 elu = lambda x: np.where(x >= 0, x, np.exp(x) - 1)
 delu = lambda x: np.where(x > 0, 1, np.exp(x))
 
-n = NeuralNetwork([SIZE**2, 15000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
+n = NeuralNetwork([SIZE ** 2, 3000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
 
-BATCH = 100  # Nombre de batch
-EPOCH = 20  # Nombre di'mage avant retropopagation
-BATCH_SIZE = 10 # Nombre d'epoch (et donc entre chaque calcul de loss)
+BATCH = 5  # Nombre de batch
+EPOCH = 5  # Nombre di'mage avant retropopagation
+BATCH_SIZE = 2  # Nombre d'epoch (et donc entre chaque calcul de loss)
 losses = np.zeros(BATCH)
 
 ## NN Execution
@@ -84,7 +85,6 @@ for i in range(BATCH):
     t3 = time.time()
     print(f"Batch : {i + 1}/{BATCH} en {round(t2 - t1, 4)} s avec {round(t3 - t2, 4)} en loss ({EPOCH} {BATCH_SIZE})")
 
-
 ## NN representation
 
 plt.figure()
@@ -92,4 +92,4 @@ plt.plot(losses)
 plt.xlabel("BATCH")
 plt.ylabel("Loss")
 plt.title(f"Covid Loss with {BATCH} batchs of {BATCH_SIZE} retropopagation")
-plt.imsave('test.png')
+plt.imsave('plot/test.png')
