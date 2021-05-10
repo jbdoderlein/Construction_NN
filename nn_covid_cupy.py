@@ -11,7 +11,7 @@ from PIL import Image
 
 SIZE = 50  # Taille des images
 test_proportion = 0.2  # Proportion des images classé comme test
-dataset_name = "jb_dataset"
+dataset_name = "jb_dataset_covid"
 
 img_train = []
 label_train = []
