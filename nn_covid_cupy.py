@@ -81,7 +81,7 @@ for i in range(BATCH):
     for j in range(BATCH_SIZE):
         img, label = [], []
         for t in range(EPOCH):
-            rn = cp.random.randint(len(img_train) - 1)
+            rn = int(cp.random.randint(len(img_train) - 1))
             img.append(img_train[rn])
             label.append(label_train[rn])
         n.train(img, label)
