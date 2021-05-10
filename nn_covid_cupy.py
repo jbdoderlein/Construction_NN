@@ -9,7 +9,7 @@ from PIL import Image
 import argparse
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-d", "--dataset", type=str, required=True, default="jb_dataset_covid")
+ap.add_argument("-d", "--dataset", type=str, default="jb_dataset_covid")
 ap.add_argument("-s", "--size", type=int, default=30)
 ap.add_argument("-tp", "--test_proportion", type=float, default=0.2)
 args = vars(ap.parse_args())
