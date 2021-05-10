@@ -16,7 +16,7 @@ args = vars(ap.parse_args())
 
 ## Dataset Init
 
-SIZE = 100  # Taille des images
+SIZE = 120  # Taille des images
 test_proportion = args["test_proportion"]  # Proportion des images classé comme test
 dataset_name = args["dataset"]
 
@@ -73,7 +73,7 @@ drelu = lambda x: cp.where(x > 0, 1, 0)
 elu = lambda x: cp.where(x >= 0, x, cp.exp(x) - 1)
 delu = lambda x: cp.where(x > 0, 1, cp.exp(x))
 
-n = NeuralNetwork([SIZE ** 2, 8000, 2500, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
+n = NeuralNetwork([SIZE ** 2, 16000, 4000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
 
 BATCH = 300  # Nombre de batch
