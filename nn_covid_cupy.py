@@ -7,6 +7,7 @@ from os import listdir
 from os.path import isfile, join
 from PIL import Image
 import argparse
+from tabulate import tabulate
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-d", "--dataset", type=str, default="jb_dataset_covid")
@@ -75,7 +76,7 @@ delu = lambda x: cp.where(x > 0, 1, cp.exp(x))
 n = NeuralNetwork([SIZE ** 2, 8000, 2500, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
 
-BATCH = 100  # Nombre de batch
+BATCH = 20  # Nombre de batch
 EPOCH = 10  # Nombre di'mage avant retropopagation
 BATCH_SIZE = 5  # Nombre d'epoch (et donc entre chaque calcul de loss)
 losses = cp.zeros(BATCH)
@@ -98,10 +99,27 @@ for i in range(BATCH):
     print(f"Batch : {i + 1}/{BATCH} en {round(t2 - t1, 4)} s avec {round(t3 - t2, 4)} en loss ({EPOCH} {BATCH_SIZE})")
 
 ## NN representation
+evaluation, accuracy, precision, recall, f1_score = n.confusion(img_test, label_test)
+peval = tabulate(evaluation, tablefmt="fancy_grid")
+pscore = tabulate(
+    [
+        ["accuracy", accuracy],
+        ["precision", precision],
+        ["recall", recall],
+        ["f1_score", f1_score]
+    ]
+    , tablefmt="fancy_grid")
+str_result = f"Evaluation :\n{peval}\nScore :\n{pscore}"
+print(str_result)
 
 plt.figure()
 plt.plot(losses.get())
 plt.xlabel("BATCH")
 plt.ylabel("Loss")
 plt.title(f"Covid Loss with {BATCH} batchs of {BATCH_SIZE} retropopagation")
-plt.savefig('plot/naif_s100_b100_e10_bs5.png')
+
+filename = "naif_s100_b120_e10_bs5"
+plt.savefig(f'plot/{filename}.png')
+with open(f"{filename}.txt", "rw") as f:
+    f.write(str_result)
+

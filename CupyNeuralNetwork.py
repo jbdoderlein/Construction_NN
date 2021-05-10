@@ -2,8 +2,10 @@ import cupy as np
 import dill
 import time
 
+
 class NeuralNetwork:
     """"Réseaux de neurones"""
+
     def __init__(self, schema=[], learning_rate=0.1, activation=[], derivation_activation=[], load=None):
         if not load:
             self.schema = schema
@@ -25,7 +27,7 @@ class NeuralNetwork:
             'biases': self.biases
         }
         with open(filename, 'wb') as f:
-            dill.dump(data,f)
+            dill.dump(data, f)
 
     def load(self, filename):
         with open(filename, 'rb') as f:
@@ -39,18 +41,18 @@ class NeuralNetwork:
 
     def generate_weights(self):
         self.weights = []
-        for i in range(len(self.schema)-1):
-            matrice = np.random.normal(0, 1, size=(self.schema[i+1], self.schema[i]))
+        for i in range(len(self.schema) - 1):
+            matrice = np.random.normal(0, 1, size=(self.schema[i + 1], self.schema[i]))
             self.weights.append(matrice)
 
     def generate_biases(self):
         self.biases = []
-        for i in range(len(self.schema)-1):
-            matrice = np.zeros(shape=(self.schema[i+1], 1))
+        for i in range(len(self.schema) - 1):
+            matrice = np.zeros(shape=(self.schema[i + 1], 1))
             self.biases.append(matrice)
 
     def forward_propagation(self, vector_input):
-        result = vector_input.reshape(vector_input.shape[0], 1) # on met en colonne
+        result = vector_input.reshape(vector_input.shape[0], 1)  # on met en colonne
         for i in range(len(self.weights)):
             result = self.activation[i](np.dot(self.weights[i], result) + self.biases[i])
         return result
@@ -58,12 +60,12 @@ class NeuralNetwork:
     def train(self, train_data, train_labels):
         s = len(self.weights)  # Nombre de matrice de poids (et aussi de biais)
         m = len(train_data)  # Taille du set d'entrainement
-        dW = [0]*s
-        dB = [0]*s
+        dW = [0] * s
+        dB = [0] * s
         for i in range(m):
             X = []
             Z = []
-            #Propagation avant
+            # Propagation avant
             result = train_data[i].reshape(train_data[i].shape[0], 1)
             X.append(result)
             for j in range(s):
@@ -71,16 +73,16 @@ class NeuralNetwork:
                 result = self.activation[j](z)
                 X.append(result)
                 Z.append(z)
-            #Retro propagation
+            # Retro propagation
             dz = X[-1] - train_labels[i]
             dW[-1] += np.dot(dz, X[-2].T)
             dB[-1] += dz
-            for j in range(2, s+1):
-                da = np.dot(self.weights[-j+1].T, dz)
+            for j in range(2, s + 1):
+                da = np.dot(self.weights[-j + 1].T, dz)
                 dz = np.multiply(da, self.derivation_activation[-j](X[-j]))
-                dW[-j] = dW[-j] + np.dot(dz, X[-j-1].T)
+                dW[-j] = dW[-j] + np.dot(dz, X[-j - 1].T)
                 dB[-j] = dB[-j] + dz
-        #Application aux biais et aux poids
+        # Application aux biais et aux poids
         for j in range(s):
             self.biases[j] -= self.learning_rate * (dB[j] / m)
             self.weights[j] -= self.learning_rate * (dW[j] / m)
@@ -97,7 +99,36 @@ class NeuralNetwork:
         for i in range(n):
             result = self.forward_propagation(training_data[i])
             loss += np.mean((result - training_labels[i]) ** 2)
-        return loss/n
+        return loss / n
 
-
-
+    def confusion(self, training_data, training_labels):
+        """
+        Confusion metrics
+        Evaluation :
+            True Positive  | False Negative
+            False Positive | True Negative
+        Positive is index 0 of output
+        :param training_data: liste de tests
+        :param training_labels: resultats attendu des test
+        :return: erreur quadratique moyenne
+        """
+        evaluation = np.zeros((2, 2))
+        n = len(training_data)
+        for i in range(n):
+            result = int(np.argmax(self.forward_propagation(training_data[i])))
+            excepted = int(np.argmax(training_labels[i]))
+            if result == 0:
+                if result == excepted:
+                    evaluation[0, 0] += 1  # TP
+                else:
+                    evaluation[1, 0] += 1  # FP
+            else:
+                if result == excepted:
+                    evaluation[1, 1] += 1  # TN
+                else:
+                    evaluation[0, 1] += 1  # FN
+        accuracy = float(evaluation[0, 0]+evaluation[1, 1]/n)
+        precision = float(evaluation[0, 0] / evaluation[0, 0] + evaluation[1, 0])
+        recall = float(evaluation[0, 0] / evaluation[0, 0] + evaluation[0, 1])
+        f1_score = float(2 * (recall * precision) / (recall + precision))
+        return evaluation, accuracy, precision, recall, f1_score
