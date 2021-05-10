@@ -2,8 +2,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from NeuralNetwork import NeuralNetwork
 
-
-
 sigmoid = lambda x: 1 / (1 + np.exp(-x))
 dsigmoid = lambda x: x * (1 - x)
 tanh = np.tanh

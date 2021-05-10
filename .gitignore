@@ -7,8 +7,5 @@
 
 test.build/
 
-*.mpi
 
-*.jpg
-
-*.png
+plot/

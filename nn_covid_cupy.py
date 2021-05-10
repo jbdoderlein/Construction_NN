@@ -3,15 +3,55 @@ import cupy as cp
 from matplotlib import pyplot as plt
 from CupyNeuralNetwork import NeuralNetwork
 import time
-import dill
+from os import listdir
+from os.path import isfile, join
 
-with open('dataset/normal_covid_v3_cupy.dataset', 'rb') as f:
-    covid = dill.load(f)
+## Dataset Init
 
-img_train, label_train, img_test, label_test = covid["img_train"], covid["label_train"], covid["img_test"], covid[
-    "label_test"]
+SIZE = 100
 
-# Fonctiosn d'activations
+img_train = []
+label_train = []
+img_test = []
+label_test = []
+
+covidfiles = [f for f in listdir('jb_dataset/covid') if isfile(join('compiled/covided', f))]
+normalfiles = [f for f in listdir('jb_dataset/normal') if isfile(join('compiled/normal', f))]
+
+test_proportion = 0.8
+SIZE = 120
+
+n = len(covidedfiles)
+for i in range(n):
+    print(i)
+    image = Image.open(f'compiled/covided/{covidedfiles[i]}').convert('L')
+    image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
+    label = np.array([0, 1])
+    if i < n*test_proportion:
+        img_train.append(image_array)
+        label_train.append(label[:, np.newaxis])
+    else:
+        img_test.append(image_array)
+        label_test.append(label[:, np.newaxis])
+
+n = len(normalfiles)
+for i in range(n):
+    print(i)
+    image = Image.open(f'compiled/normal/{normalfiles[i]}').convert('L')
+    image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
+    label = np.array([1, 0])
+    if i < n*test_proportion:
+        img_train.append(image_array)
+        label_train.append(label[:, np.newaxis])
+    else:
+        img_test.append(image_array)
+        label_test.append(label[:, np.newaxis])
+
+
+# NN Init
+
+
+# Fonctions d'activations
 sigmoid = lambda x: 1 / (1 + np.exp(-x))
 dsigmoid = lambda x: x * (1 - x)
 tanh = np.tanh
@@ -30,6 +70,8 @@ BATCH_SIZE = 10 # Nombre d'epoch (et donc entre chaque calcul de loss)
 losses = np.zeros(BATCH)
 losses2 = np.zeros(BATCH)
 
+## NN Execution
+
 for i in range(BATCH):
     t1 = time.time()
     for j in range(BATCH_SIZE):
@@ -45,10 +87,8 @@ for i in range(BATCH):
     t3 = time.time()
     print(f"Batch : {i + 1}/{BATCH} en {round(t2 - t1, 4)} s avec {round(t3 - t2, 4)} en loss ({EPOCH} {BATCH_SIZE})")
 
-n.save("covid_v3_120_cupy.nn")
-with open("covid_v3_120_cupy.mpi", 'wb') as f:
-    dill.dump(losses.tolist(), f)
 
+## NN representation
 
 plt.figure()
 plt.plot(losses)
