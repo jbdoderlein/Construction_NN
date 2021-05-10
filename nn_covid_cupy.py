@@ -15,7 +15,7 @@ args = vars(ap.parse_args())
 
 ## Dataset Init
 
-SIZE = 100  # Taille des images
+SIZE = 80  # Taille des images
 test_proportion = args["test_proportion"]  # Proportion des images classé comme test
 dataset_name = args["dataset"]
 
