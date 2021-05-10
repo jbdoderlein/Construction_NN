@@ -15,7 +15,7 @@ args = vars(ap.parse_args())
 
 ## Dataset Init
 
-SIZE = 60  # Taille des images
+SIZE = 100  # Taille des images
 test_proportion = args["test_proportion"]  # Proportion des images classé comme test
 dataset_name = args["dataset"]
 
@@ -72,10 +72,10 @@ drelu = lambda x: cp.where(x > 0, 1, 0)
 elu = lambda x: cp.where(x >= 0, x, cp.exp(x) - 1)
 delu = lambda x: cp.where(x > 0, 1, cp.exp(x))
 
-n = NeuralNetwork([SIZE ** 2, 4000, 2000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
+n = NeuralNetwork([SIZE ** 2, 8000, 2500, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
 
-BATCH = 20  # Nombre de batch
+BATCH = 100  # Nombre de batch
 EPOCH = 10  # Nombre di'mage avant retropopagation
 BATCH_SIZE = 5  # Nombre d'epoch (et donc entre chaque calcul de loss)
 losses = cp.zeros(BATCH)
@@ -104,4 +104,4 @@ plt.plot(losses.get())
 plt.xlabel("BATCH")
 plt.ylabel("Loss")
 plt.title(f"Covid Loss with {BATCH} batchs of {BATCH_SIZE} retropopagation")
-plt.savefig('plot/test.png')
+plt.savefig('plot/naif_s100_b100_e10_bs5.png')
