@@ -127,8 +127,8 @@ class NeuralNetwork:
                     evaluation[1, 1] += 1  # TN
                 else:
                     evaluation[0, 1] += 1  # FN
-        accuracy = float(evaluation[0, 0]+evaluation[1, 1]/n)
-        precision = float(evaluation[0, 0] / evaluation[0, 0] + evaluation[1, 0])
-        recall = float(evaluation[0, 0] / evaluation[0, 0] + evaluation[0, 1])
+        accuracy = float(evaluation[0, 0]+evaluation[1, 1]) / n
+        precision = float(evaluation[0, 0]) / float(evaluation[0, 0] + evaluation[1, 0])
+        recall = float(evaluation[0, 0]) / float(evaluation[0, 0] + evaluation[0, 1])
         f1_score = float(2 * (recall * precision) / (recall + precision))
         return evaluation, accuracy, precision, recall, f1_score

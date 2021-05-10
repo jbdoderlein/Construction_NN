@@ -16,7 +16,7 @@ args = vars(ap.parse_args())
 
 ## Dataset Init
 
-SIZE = 110  # Taille des images
+SIZE = 120  # Taille des images
 test_proportion = args["test_proportion"]  # Proportion des images classé comme test
 dataset_name = args["dataset"]
 
@@ -73,12 +73,12 @@ drelu = lambda x: cp.where(x > 0, 1, 0)
 elu = lambda x: cp.where(x >= 0, x, cp.exp(x) - 1)
 delu = lambda x: cp.where(x > 0, 1, cp.exp(x))
 
-n = NeuralNetwork([SIZE ** 2, 13000, 3000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
+n = NeuralNetwork([SIZE ** 2, 16000, 1000, 500, 50, 2], 0.01, [tanh, sigmoid, tanh, tanh, sigmoid],
                   [dtanh, dsigmoid, dtanh, dtanh, dsigmoid])
 
-BATCH = 500  # Nombre de batch
-EPOCH = 5  # Nombre d'image avant retropopagation
-BATCH_SIZE = 20  # Nombre d'epoch (et donc entre chaque calcul de loss)
+BATCH = 150  # Nombre de batch
+EPOCH = 2  # Nombre d'image avant retropopagation
+BATCH_SIZE = 10  # Nombre d'epoch (et donc entre chaque calcul de loss)
 losses = cp.zeros(BATCH)
 
 ## NN Execution
