@@ -41,7 +41,7 @@ for i in range(covidfiles_size):
 
 for i in range(normalfiles_size):
     try:
-        image = Image.open(f'{dataset_name}/normal/{covidfiles[i]}').convert('L')
+        image = Image.open(f'{dataset_name}/normal/{normalfiles[i]}').convert('L')
         image_array = np.array(image.resize((SIZE, SIZE))).reshape((SIZE ** 2,))
         label = np.array([0, 1])
         if i < normalfiles_size * (1 - test_proportion):  # Image train
